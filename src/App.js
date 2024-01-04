@@ -95,12 +95,9 @@ function App() {
         )}-${day.padStart(2, "0")}`;
         const xPosition = event.pageX;
         const yPosition = event.pageY;
+        tooltip.transition().duration(100).style("opacity", 0.8);
         tooltip
-          .transition()
-          .duration(100)
-          .style("opacity", 0.8)
-          .attr("data-date", zeroPaddedDate);
-        tooltip
+          .attr("data-date", zeroPaddedDate)
           .html(`Date: ${dateFormatter(d.date)}<br>GDP: ${d.gdp}`)
           .style("left", xPosition - margin.left + margin.right + "px")
           .style("top", yPosition - margin.top + margin.bottom + "px");
