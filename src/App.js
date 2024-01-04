@@ -26,7 +26,7 @@ function App() {
   useEffect(() => {
     if (values.length === 0) return;
 
-    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    const margin = { top: 10, right: 10, bottom: 20, left: 40 };
     const width = 1000 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
@@ -87,15 +87,23 @@ function App() {
       .attr("data-gdp", (d) => d.gdp)
       .attr("fill", (d, i) => colors[i % colors.length])
       .on("mouseover", (event, d) => {
+        const formattedDate = dateFormatter(d.date);
+        const [year, month, day] = formattedDate.split("-");
+        const zeroPaddedDate = `${year}-${month.padStart(
+          2,
+          "0"
+        )}-${day.padStart(2, "0")}`;
+        const xPosition = event.pageX;
+        const yPosition = event.pageY;
         tooltip
           .transition()
           .duration(100)
           .style("opacity", 0.8)
-          .attr("data-date", dateFormatter(d.date));
+          .attr("data-date", zeroPaddedDate);
         tooltip
           .html(`Date: ${dateFormatter(d.date)}<br>GDP: ${d.gdp}`)
-          .style("left", d3.pointer(event)[0] - margin.left + 10 + "px")
-          .style("top", d3.pointer(event)[1] + margin.top - 30 + "px");
+          .style("left", xPosition - margin.left + margin.right + "px")
+          .style("top", yPosition - margin.top + margin.bottom + "px");
       })
       .on("mouseout", () => {
         tooltip.transition().duration(100).style("opacity", 0);
@@ -109,7 +117,7 @@ function App() {
       .attr("text-anchor", "middle")
       .style("font-size", "0.75em")
       .text("Gross Domestic Product");
-  }, [values]);
+  }, [values, colors]);
 
   return (
     <div className="App">
